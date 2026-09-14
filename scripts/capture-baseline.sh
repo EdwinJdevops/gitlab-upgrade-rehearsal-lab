@@ -65,8 +65,12 @@ fetch_one \
 # not semantic validation of GitLab's upgrade rules.
 python3 -m json.tool "${files_dir}/path.json" >/dev/null
 
-grep -Eq '19\.2' "${files_dir}/upgrade_path.yml" || {
-  echo 'baseline capture failed: upgrade_path.yml does not contain expected GitLab 19.2 stop material' >&2
+awk '
+  $1 == "-" && $2 == "major:" { major = $3 }
+  $1 == "minor:" && major == 19 && $2 == 2 { found = 1 }
+  END { exit(found ? 0 : 1) }
+' "${files_dir}/upgrade_path.yml" || {
+  echo 'baseline capture failed: upgrade_path.yml does not contain GitLab 19 / minor 2 required-stop entry' >&2
   exit 1
 }
 
