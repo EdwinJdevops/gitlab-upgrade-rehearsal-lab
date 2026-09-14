@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.env.*
+*.log
+results/
+evidence-private/
+fixtures-private/
+*.key
+*.pem
+*gitlab-secrets.json*
